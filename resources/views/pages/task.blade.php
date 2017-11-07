@@ -21,4 +21,11 @@
     </button>
 </div>
 
+    <script>
+        $.get('/load', function(json){
+            console.log(json);
+        });
+    </script>
+
+    
 @endsection
