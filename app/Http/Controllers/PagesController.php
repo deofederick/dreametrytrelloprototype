@@ -301,110 +301,6 @@ class PagesController extends Controller
                                 }
                                 
                             }
-                            /* for ($i=0; $i < count($card['idMembers']) ; $i++) { 
-                                if ($idUser === $card['idMembers'][$i]) {
-                                    if (count($card['labels']) > 0) {
-                                        for ($p=0; $p < count($card['labels']) ; $p++) { 
-                                            //  \Log::info($card['labels'][$p]['name']);
-                                            switch ($card['labels'][$p]['name']) {
-                                                case 'L1':
-                                                    if (count($list)) {
-                                                        $DataL1[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL1[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
-                                                    break;
-                                                case 'L2':
-                                                    if (count($list)) {
-                                                        $DataL2[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL2[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
-                                                    break;
-                                                case 'L3':
-                                                    if (count($list)) {
-                                                        $DataL3[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL3[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
-                                                    break;
-                                                case 'L4':
-                                                    if (count($list)) {
-                                                        $DataL4[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL4[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
-                                                    break;
-                                                case 'L5':
-                                                    if (count($list)) {
-                                                        $DataL5[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL5[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
-                                                    break;
-                                                    
-                                            }
-                                        }
-                                    }else{
-
-                                        if (count($list)) {
-                                            $DataNoLabel[] = array(
-                                                'cardname' => $card['name'],
-                                                'cardUrl' => $card['shortUrl'],
-                                                'status' => $list->status->status_name
-                                            );
-                                        } else {
-                                            $DataNoLabel[] = array(
-                                                'cardname' => $card['name'],
-                                                'cardUrl' => $card['shortUrl'],
-                                                'status' => "Not in Progress"
-                                            );
-                                        }
-                                        
-                                    }
-
-                                }
-                            } */
                         }
                         
                         
@@ -509,8 +405,6 @@ class PagesController extends Controller
             }
 
             $data = array(
-                // 'boards' => $boardArray,
-                 
                  'todo' => $todo,
                  'rev' => $rev,
                  'done' => $done,
@@ -520,12 +414,11 @@ class PagesController extends Controller
              );
         }
 
-        \Log::info($data);
+      /*   \Log::info($data); */
         
         $var = 0;
          return view('pages.task')->with($data);
 
-       // return view('pages.task')->with('variable', $var);
        
     }
 }
