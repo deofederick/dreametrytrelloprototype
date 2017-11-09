@@ -123,28 +123,28 @@
 
             for(i = 0; i < json["l2cards"].length; i++){
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l2cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l2cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
+                var list = "<li class=\"list-group-item\"><a href=\""+json["l2cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l2cards"][i]["cardname"]+"</a> - "+json["l2cards"][i]["status"]+"</li>";
                 $("#l2_task").append(list);
             
             }
 
             for(i = 0; i < json["l3cards"].length; i++){
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l3cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l3cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
+                var list = "<li class=\"list-group-item\"><a href=\""+json["l3cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l3cards"][i]["cardname"]+"</a> - "+json["l3cards"][i]["status"]+"</li>";
                 $("#l3_task").append(list);
             
             }
 
             for(i = 0; i < json["l4cards"].length; i++){
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l4cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l4cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
+                var list = "<li class=\"list-group-item\"><a href=\""+json["l4cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l4cards"][i]["cardname"]+"</a> - "+json["l4cards"][i]["status"]+"</li>";
                 $("#l4_task").append(list);
             
             }
 
             for(i = 0; i < json["l5cards"].length; i++){
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l5cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l5cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
+                var list = "<li class=\"list-group-item\"><a href=\""+json["l5cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l5cards"][i]["cardname"]+"</a> - "+json["l5cards"][i]["status"]+"</li>";
                 $("#l5_task").append(list);
             
             }

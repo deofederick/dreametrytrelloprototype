@@ -174,246 +174,144 @@ class PagesController extends Controller
                 $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                 $listresponse = Curl::to($listUrl)->get();
                 $lists = json_decode($listresponse, TRUE);
-                // \Log::info($board['name']);
+                // \Log::info($lists);
                 foreach ($lists as $list) {
                     $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
                     $cardsResponse = Curl::to($cardsUrl)->get();
                     $cards = json_decode($cardsResponse, TRUE);
+
+                    //\Log::info($list['name']." - ".count($cards));
+
+                    $listname = $list['name'];
+                    /*  
+                    if (count($list)) {
+                        \Log::info($list->status->status_name." - ".$card['name']);
+                    }else{
+                        \Log::info("Not in Progress"." - ".$card['name']);
+                    }
+                    
+                    
                    // \Log::info($cards);
-                     /* 
+                      
                     $DataL1[] = array(
                         'cardname' => $card['name'],
                         'cardUrl' => $card['shortUrl'],
                         'status' => $list->status->status_name
                     );
                     */
+                    $dblist = boardList::where('list_id', $list['id'])->first();
 
-                    
                     foreach ($cards as $card) {
 
-                        if (count($card['idMembers']) > 0) {
-
-                            $list = boardList::where('list_id', $card['idList'])->first();
-                           /*  if (count($list)) {
-                                \Log::info($list->status->status_name." - ".$card['name']);
-                            }else{
-                                \Log::info("Not in Progress"." - ".$card['name']);
-                            }
-                            
-                            */ 
-                            \Log::info(count($card['labels']));
-                            if (count($card['labels']) > 0) {
-                                for ($p=0; $p < count($card['labels']) ; $p++) { 
-                                    //  \Log::info($card['labels'][$p]['name']);
-                                    if (count($list)) {
-                                        \Log::info($list->status->status_name." - ".$card['name']." - ".$card['labels'][$p]['name']);
-                                        
-                                    }else{
-                                        \Log::info("Not in Progress"." - ".$card['name']." - ".$card['labels'][$p]['name']);
-                                    }
-
-                                    switch ($card['labels'][$p]['name']) {
-                                        case 'L1':
-                                            if (count($list)) {
-                                                $DataL1[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL1[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L2':
-                                            if (count($list)) {
-                                                $DataL2[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL2[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L3':
-                                            if (count($list)) {
-                                                $DataL3[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL3[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L4':
-                                            if (count($list)) {
-                                                $DataL4[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL4[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L5':
-                                            if (count($list)) {
-                                                $DataL5[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL5[] = array(
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                            
-                                    }
-                                }
-                            }else{
-
-                                if (count($list)) {
-                                    $DataNoLabel[] = array(
-                                        'cardname' => $card['name'],
-                                        'cardUrl' => $card['shortUrl'],
-                                        'status' => $list->status->status_name
-                                    );
-                                } else {
-                                    $DataNoLabel[] = array(
-                                        'cardname' => $card['name'],
-                                        'cardUrl' => $card['shortUrl'],
-                                        'status' => "Not in Progress"
-                                    );
-                                }
-                                
-                            }
-                            /* for ($i=0; $i < count($card['idMembers']) ; $i++) { 
-                                if ($idUser === $card['idMembers'][$i]) {
-                                    if (count($card['labels']) > 0) {
-                                        for ($p=0; $p < count($card['labels']) ; $p++) { 
-                                            //  \Log::info($card['labels'][$p]['name']);
-                                            switch ($card['labels'][$p]['name']) {
+                        foreach ($card['idMembers'] as $idMember) {
+                            if ($idMember == $idUser) {
+                                if($dblist){
+                                    if ($card['labels']) {
+                                        foreach ($card['labels'] as $label) {
+                                            switch ($label['name']) {
                                                 case 'L1':
-                                                    if (count($list)) {
-                                                        $DataL1[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL1[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
+                                                    $DataL1[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
                                                     break;
                                                 case 'L2':
-                                                    if (count($list)) {
-                                                        $DataL2[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL2[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
+                                                    $DataL2[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
                                                     break;
                                                 case 'L3':
-                                                    if (count($list)) {
-                                                        $DataL3[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL3[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
+                                                    $DataL3[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
                                                     break;
                                                 case 'L4':
-                                                    if (count($list)) {
-                                                        $DataL4[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL4[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
+                                                    $DataL4[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
                                                     break;
                                                 case 'L5':
-                                                    if (count($list)) {
-                                                        $DataL5[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => $list->status->status_name
-                                                        );
-                                                    }else{
-                                                        $DataL5[] = array(
-                                                            'cardname' => $card['name'],
-                                                            'cardUrl' => $card['shortUrl'],
-                                                            'status' => "Not in Progress"
-                                                        );
-                                                    }
+                                                    $DataL5[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
                                                     break;
-                                                    
+                                    
                                             }
+                                            \Log::info($dblist->status->status_name." - ".$card['name']." - ".$label['name']);
                                         }
                                     }else{
-
-                                        if (count($list)) {
-                                            $DataNoLabel[] = array(
-                                                'cardname' => $card['name'],
-                                                'cardUrl' => $card['shortUrl'],
-                                                'status' => $list->status->status_name
-                                            );
-                                        } else {
-                                            $DataNoLabel[] = array(
-                                                'cardname' => $card['name'],
-                                                'cardUrl' => $card['shortUrl'],
-                                                'status' => "Not in Progress"
-                                            );
+                                        $DataNoLabel[] = array(
+                                            'cardname' => $card['name'],
+                                            'cardUrl' => $card['shortUrl'],
+                                            'status' => $dblist->status->status_name
+                                        );
+                                        \Log::info($dblist->status->status_name." - ".$card['name']." - No Label");
+                                    }
+                                    
+                                }else{
+                                    if ($card['labels']) {
+                                        foreach ($card['labels'] as $label) {
+                                            switch ($label['name']) {
+                                                case 'L1':
+                                                    $DataL1[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L2':
+                                                    $DataL2[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L3':
+                                                    $DataL3[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L4':
+                                                    $DataL4[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L5':
+                                                    $DataL5[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                    
+                                            }
+                                             \Log::info("Not in Progress - ".$card['name']." - ".$label['name']);
                                         }
-                                        
+                                    }else{
+                                        $DataNoLabel[] = array(
+                                            'cardname' => $card['name'],
+                                            'cardUrl' => $card['shortUrl'],
+                                            'status' => "Not in Progress"
+                                        );
+                                        \Log::info("Not in Progress - ".$card['name']." - No Label");
                                     }
 
                                 }
-                            } */
+                            }
                         }
-                        
                         
                     }
                     
