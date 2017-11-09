@@ -23,7 +23,7 @@
                     
                     <li><a href="{{ route('task') }}">Task</a></li>
                     <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Trello</a></li>
+                    <li><a href="https://trello.com">Trello</a></li>
 
                 @endif
             </ul>

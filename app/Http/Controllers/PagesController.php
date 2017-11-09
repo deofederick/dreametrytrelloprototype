@@ -205,13 +205,6 @@ class PagesController extends Controller
                             if (count($card['labels']) > 0) {
                                 for ($p=0; $p < count($card['labels']) ; $p++) { 
                                     //  \Log::info($card['labels'][$p]['name']);
-                                    if (count($list)) {
-                                        \Log::info($list->status->status_name." - ".$card['name']." - ".$card['labels'][$p]['name']);
-                                        
-                                    }else{
-                                        \Log::info("Not in Progress"." - ".$card['name']." - ".$card['labels'][$p]['name']);
-                                    }
-
                                     switch ($card['labels'][$p]['name']) {
                                         case 'L1':
                                             if (count($list)) {

@@ -145,9 +145,7 @@
 
 
     <script>
-        $.get('/load', function(json){
-            console.log(json);
-        });
+    
     </script>
   
 
