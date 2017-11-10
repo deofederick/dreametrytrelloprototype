@@ -149,6 +149,7 @@ class PagesController extends Controller
 
         }
         
+
     }
 
     public function taskload(){
@@ -202,106 +203,48 @@ class PagesController extends Controller
 
                     foreach ($cards as $card) {
 
-                        
-
-                            $list = boardList::where('list_id', $card['idList'])->first();
-
-                           /*  if (count($list)) {
-                                \Log::info($list->status->status_name." - ".$card['name']);
-                            }else{
-                                \Log::info("Not in Progress"." - ".$card['name']);
-                            }
-                            
-                            */ 
-                           // \Log::info(count($card['labels']));
-                            
-                            if (count($card['labels'])) {
-                                for ($p=0; $p < count($card['labels']) ; $p++) { 
-                                    //  \Log::info($card['labels'][$p]['name']);
-                                    switch ($card['labels'][$p]['name']) {
-                                        case 'L1':
-                                            if (count($list)) {
-                                                $DataL1[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL1[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L2':
-                                            if (count($list)) {
-                                                $DataL2[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL2[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L3':
-                                            if (count($list)) {
-                                                $DataL3[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL3[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L4':
-                                            if (count($list)) {
-                                                $DataL4[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL4[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
-                                            }
-                                            break;
-                                        case 'L5':
-                                            if (count($list)) {
-                                                $DataL5[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => $list->status->status_name
-                                                );
-                                            }else{
-                                                $DataL5[] = array(
-                                                    'boardName' => $board['board_name'],
-                                                    'cardname' => $card['name'],
-                                                    'cardUrl' => $card['shortUrl'],
-                                                    'status' => "Not in Progress"
-                                                );
+                        foreach ($card['idMembers'] as $idMember) {
+                            if ($idMember == $idUser) {
+                                if($dblist){
+                                    if ($card['labels']) {
+                                        foreach ($card['labels'] as $label) {
+                                            switch ($label['name']) {
+                                                case 'L1':
+                                                    $DataL1[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
+                                                    break;
+                                                case 'L2':
+                                                    $DataL2[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
+                                                    break;
+                                                case 'L3':
+                                                    $DataL3[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
+                                                    break;
+                                                case 'L4':
+                                                    $DataL4[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
+                                                    break;
+                                                case 'L5':
+                                                    $DataL5[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => $dblist->status->status_name
+                                                    );
+                                                    break;
+                                    
                                             }
                                            // \Log::info($dblist->status->status_name." - ".$card['name']." - ".$label['name']);
                                         }
@@ -393,11 +336,6 @@ class PagesController extends Controller
     }
 
     public function task(){
-        
-        $data = self::counttask();
-        return view('pages.task')->with($data);
-       
-    }
 
        
 
@@ -414,7 +352,6 @@ class PagesController extends Controller
          $id = auth()->user()->trelloId;
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
-        
         $lists = boardList::all();
         //\Log::info($lists);
         $todo = 0;
@@ -438,12 +375,9 @@ class PagesController extends Controller
             switch ($status) {
                 case 'To Do':
                     foreach ($trellolists as $member) {
-                        if (count($member)) {
-                            foreach ($member['idMembers'] as $idMember) {
-                                $todo += ($idMember == $id) ? 1 : 0 ;
-                            }
+                        foreach ($member['idMembers'] as $idMember) {
+                            $todo += ($idMember == $id) ? 1 : 0 ;
                         }
-                        
                     }
 
 
@@ -452,10 +386,8 @@ class PagesController extends Controller
                 
                 case 'For Review':
                     foreach ($trellolists as $member) {
-                        if (count($member)) {
-                            foreach ($member['idMembers'] as $idMember) {
-                                $rev += ($idMember == $id) ? 1 : 0 ;
-                            }
+                        foreach ($member['idMembers'] as $idMember) {
+                            $rev += ($idMember == $id) ? 1 : 0 ;
                         }
                     }
 
@@ -464,10 +396,8 @@ class PagesController extends Controller
                 
                 case 'Done':
                     foreach ($trellolists as $member) {
-                        if (count($member)) {
-                            foreach ($member['idMembers'] as $idMember) {
-                                $done += ($idMember == $id) ? 1 : 0 ;
-                            }
+                        foreach ($member['idMembers'] as $idMember) {
+                            $done += ($idMember == $id) ? 1 : 0 ;
                         }
                     }
 
@@ -476,10 +406,8 @@ class PagesController extends Controller
 
                 case 'Paid':
                     foreach ($trellolists as $member) {
-                        if (count($member)) {
-                            foreach ($member['idMembers'] as $idMember) {
-                                $paid += ($idMember == $id) ? 1 : 0 ;
-                            }
+                        foreach ($member['idMembers'] as $idMember) {
+                            $paid += ($idMember == $id) ? 1 : 0 ;
                         }
                     }
 
@@ -488,10 +416,8 @@ class PagesController extends Controller
 
                 case '':
                     foreach ($trellolists as $member) {
-                        if (count($member)) {
-                            foreach ($member['idMembers'] as $idMember) {
-                                $unreglist += ($idMember == $id) ? 1 : 0 ;
-                            }
+                        foreach ($member['idMembers'] as $idMember) {
+                            $unreglist += ($idMember == $id) ? 1 : 0 ;
                         }
                     }
 
@@ -500,6 +426,8 @@ class PagesController extends Controller
             }
 
             $data = array(
+                // 'boards' => $boardArray,
+                 
                  'todo' => $todo,
                  'rev' => $rev,
                  'done' => $done,
@@ -508,6 +436,7 @@ class PagesController extends Controller
     
              );
         }
+
         return $data;
     }
 }
