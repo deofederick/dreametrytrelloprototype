@@ -173,21 +173,33 @@ class PagesController extends Controller
                 $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                 $listresponse = Curl::to($listUrl)->get();
                 $lists = json_decode($listresponse, TRUE);
-               //  \Log::info($board['board_name']);
+                // \Log::info($lists);
                 foreach ($lists as $list) {
                     $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
                     $cardsResponse = Curl::to($cardsUrl)->get();
                     $cards = json_decode($cardsResponse, TRUE);
+
+                    //\Log::info($list['name']." - ".count($cards));
+
+                    $listname = $list['name'];
+                    /*  
+                    if (count($list)) {
+                        \Log::info($list->status->status_name." - ".$card['name']);
+                    }else{
+                        \Log::info("Not in Progress"." - ".$card['name']);
+                    }
+                    
+                    
                    // \Log::info($cards);
-                     /* 
+                      
                     $DataL1[] = array(
                         'cardname' => $card['name'],
                         'cardUrl' => $card['shortUrl'],
                         'status' => $list->status->status_name
                     );
                     */
+                    $dblist = boardList::where('list_id', $list['id'])->first();
 
-                    
                     foreach ($cards as $card) {
 
                         
@@ -291,31 +303,72 @@ class PagesController extends Controller
                                                     'status' => "Not in Progress"
                                                 );
                                             }
-                                            break;
-                                            
+                                           // \Log::info($dblist->status->status_name." - ".$card['name']." - ".$label['name']);
+                                        }
+                                    }else{
+                                        $DataNoLabel[] = array(
+                                            'cardname' => $card['name'],
+                                            'cardUrl' => $card['shortUrl'],
+                                            'status' => $dblist->status->status_name
+                                        );
+                                        //\Log::info($dblist->status->status_name." - ".$card['name']." - No Label");
                                     }
-                                }
-                            }else{
+                                    
+                                }else{
+                                    if ($card['labels']) {
+                                        foreach ($card['labels'] as $label) {
+                                            switch ($label['name']) {
+                                                case 'L1':
+                                                    $DataL1[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L2':
+                                                    $DataL2[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L3':
+                                                    $DataL3[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L4':
+                                                    $DataL4[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                                case 'L5':
+                                                    $DataL5[] = array(
+                                                        'cardname' => $card['name'],
+                                                        'cardUrl' => $card['shortUrl'],
+                                                        'status' => "Not in Progress"
+                                                    );
+                                                    break;
+                                    
+                                            }
+                                           //  \Log::info("Not in Progress - ".$card['name']." - ".$label['name']);
+                                        }
+                                    }else{
+                                        $DataNoLabel[] = array(
+                                            'cardname' => $card['name'],
+                                            'cardUrl' => $card['shortUrl'],
+                                            'status' => "Not in Progress"
+                                        );
+                                        //\Log::info("Not in Progress - ".$card['name']." - No Label");
+                                    }
 
-                                if (count($list)) {
-                                    $DataNoLabel[] = array(
-                                        'boardName' => $board['board_name'],
-                                        'cardname' => $card['name'],
-                                        'cardUrl' => $card['shortUrl'],
-                                        'status' => $list->status->status_name
-                                    );
-                                } else {
-                                    $DataNoLabel[] = array(
-                                        'boardName' => $board['board_name'],
-                                        'cardname' => $card['name'],
-                                        'cardUrl' => $card['shortUrl'],
-                                        'status' => "Not in Progress"
-                                    );
                                 }
-                                
                             }
-                        
-                        
+                        }
                         
                     }
                     
@@ -346,8 +399,19 @@ class PagesController extends Controller
        
     }
 
+       
+
+      //  \Log::info($data);
+        
+        $data = self::counttask();
+         return view('pages.task')->with($data);
+
+       // return view('pages.task')->with('variable', $var);
+       
+    }
+
     public function counttask(){
-        $id = auth()->user()->trelloId;
+         $id = auth()->user()->trelloId;
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
         
@@ -444,7 +508,6 @@ class PagesController extends Controller
     
              );
         }
-        
         return $data;
     }
 }
