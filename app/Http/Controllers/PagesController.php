@@ -149,7 +149,6 @@ class PagesController extends Controller
 
         }
         
-
     }
 
     public function taskload(){
@@ -174,7 +173,7 @@ class PagesController extends Controller
                 $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                 $listresponse = Curl::to($listUrl)->get();
                 $lists = json_decode($listresponse, TRUE);
-                // \Log::info($board['name']);
+               //  \Log::info($board['board_name']);
                 foreach ($lists as $list) {
                     $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
                     $cardsResponse = Curl::to($cardsUrl)->get();
@@ -191,9 +190,10 @@ class PagesController extends Controller
                     
                     foreach ($cards as $card) {
 
-                        if (count($card['idMembers']) > 0) {
+                        
 
                             $list = boardList::where('list_id', $card['idList'])->first();
+
                            /*  if (count($list)) {
                                 \Log::info($list->status->status_name." - ".$card['name']);
                             }else{
@@ -201,20 +201,23 @@ class PagesController extends Controller
                             }
                             
                             */ 
-                            \Log::info(count($card['labels']));
-                            if (count($card['labels']) > 0) {
+                           // \Log::info(count($card['labels']));
+                            
+                            if (count($card['labels'])) {
                                 for ($p=0; $p < count($card['labels']) ; $p++) { 
                                     //  \Log::info($card['labels'][$p]['name']);
                                     switch ($card['labels'][$p]['name']) {
                                         case 'L1':
                                             if (count($list)) {
                                                 $DataL1[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => $list->status->status_name
                                                 );
                                             }else{
                                                 $DataL1[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => "Not in Progress"
@@ -224,12 +227,14 @@ class PagesController extends Controller
                                         case 'L2':
                                             if (count($list)) {
                                                 $DataL2[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => $list->status->status_name
                                                 );
                                             }else{
                                                 $DataL2[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => "Not in Progress"
@@ -239,12 +244,14 @@ class PagesController extends Controller
                                         case 'L3':
                                             if (count($list)) {
                                                 $DataL3[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => $list->status->status_name
                                                 );
                                             }else{
                                                 $DataL3[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => "Not in Progress"
@@ -254,12 +261,14 @@ class PagesController extends Controller
                                         case 'L4':
                                             if (count($list)) {
                                                 $DataL4[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => $list->status->status_name
                                                 );
                                             }else{
                                                 $DataL4[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => "Not in Progress"
@@ -269,12 +278,14 @@ class PagesController extends Controller
                                         case 'L5':
                                             if (count($list)) {
                                                 $DataL5[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => $list->status->status_name
                                                 );
                                             }else{
                                                 $DataL5[] = array(
+                                                    'boardName' => $board['board_name'],
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
                                                     'status' => "Not in Progress"
@@ -288,12 +299,14 @@ class PagesController extends Controller
 
                                 if (count($list)) {
                                     $DataNoLabel[] = array(
+                                        'boardName' => $board['board_name'],
                                         'cardname' => $card['name'],
                                         'cardUrl' => $card['shortUrl'],
                                         'status' => $list->status->status_name
                                     );
                                 } else {
                                     $DataNoLabel[] = array(
+                                        'boardName' => $board['board_name'],
                                         'cardname' => $card['name'],
                                         'cardUrl' => $card['shortUrl'],
                                         'status' => "Not in Progress"
@@ -301,7 +314,7 @@ class PagesController extends Controller
                                 }
                                 
                             }
-                        }
+                        
                         
                         
                     }
@@ -315,8 +328,8 @@ class PagesController extends Controller
                 'l3cards' => $DataL3,
                 'l4cards' => $DataL4,
                 'l5cards' => $DataL5,
-                'nolabel' => $DataNoLabel
-
+                'nolabel' => $DataNoLabel,
+                'count' => self::counttask()
             );
             
             //  \Log::info($data);
@@ -327,10 +340,17 @@ class PagesController extends Controller
     }
 
     public function task(){
+        
+        $data = self::counttask();
+        return view('pages.task')->with($data);
+       
+    }
 
+    public function counttask(){
         $id = auth()->user()->trelloId;
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
+        
         $lists = boardList::all();
         //\Log::info($lists);
         $todo = 0;
@@ -354,9 +374,12 @@ class PagesController extends Controller
             switch ($status) {
                 case 'To Do':
                     foreach ($trellolists as $member) {
-                        foreach ($member['idMembers'] as $idMember) {
-                            $todo += ($idMember == $id) ? 1 : 0 ;
+                        if (count($member)) {
+                            foreach ($member['idMembers'] as $idMember) {
+                                $todo += ($idMember == $id) ? 1 : 0 ;
+                            }
                         }
+                        
                     }
 
 
@@ -365,8 +388,10 @@ class PagesController extends Controller
                 
                 case 'For Review':
                     foreach ($trellolists as $member) {
-                        foreach ($member['idMembers'] as $idMember) {
-                            $rev += ($idMember == $id) ? 1 : 0 ;
+                        if (count($member)) {
+                            foreach ($member['idMembers'] as $idMember) {
+                                $rev += ($idMember == $id) ? 1 : 0 ;
+                            }
                         }
                     }
 
@@ -375,8 +400,10 @@ class PagesController extends Controller
                 
                 case 'Done':
                     foreach ($trellolists as $member) {
-                        foreach ($member['idMembers'] as $idMember) {
-                            $done += ($idMember == $id) ? 1 : 0 ;
+                        if (count($member)) {
+                            foreach ($member['idMembers'] as $idMember) {
+                                $done += ($idMember == $id) ? 1 : 0 ;
+                            }
                         }
                     }
 
@@ -385,8 +412,10 @@ class PagesController extends Controller
 
                 case 'Paid':
                     foreach ($trellolists as $member) {
-                        foreach ($member['idMembers'] as $idMember) {
-                            $paid += ($idMember == $id) ? 1 : 0 ;
+                        if (count($member)) {
+                            foreach ($member['idMembers'] as $idMember) {
+                                $paid += ($idMember == $id) ? 1 : 0 ;
+                            }
                         }
                     }
 
@@ -395,8 +424,10 @@ class PagesController extends Controller
 
                 case '':
                     foreach ($trellolists as $member) {
-                        foreach ($member['idMembers'] as $idMember) {
-                            $unreglist += ($idMember == $id) ? 1 : 0 ;
+                        if (count($member)) {
+                            foreach ($member['idMembers'] as $idMember) {
+                                $unreglist += ($idMember == $id) ? 1 : 0 ;
+                            }
                         }
                     }
 
@@ -413,12 +444,7 @@ class PagesController extends Controller
     
              );
         }
-
-      /*   \Log::info($data); */
         
-        $var = 0;
-         return view('pages.task')->with($data);
-
-       
+        return $data;
     }
 }

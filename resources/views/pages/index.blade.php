@@ -26,7 +26,6 @@
                         <span class="label label-default">Unassigned - {{$unassigned}}</span>
                         <span class="label label-default">Total Cards - {{$totalcards}}</span>
                     
-
                     </div>
                 </div>
             </div>

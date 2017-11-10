@@ -38,7 +38,7 @@ class ListsController extends Controller
                   
                   $orgresponse = Curl::to($orgurl)->get();
                   $org = json_decode($orgresponse, TRUE);
-  
+                
                   for ($i=0; $i < count($boards); $i++) { 
 
                     
