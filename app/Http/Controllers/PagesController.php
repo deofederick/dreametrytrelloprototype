@@ -325,7 +325,7 @@ class PagesController extends Controller
                 'l4cards' => $DataL4,
                 'l5cards' => $DataL5,
                 'nolabel' => $DataNoLabel,
-                'count' => self::counttask()
+                'count' => self::counttask() //same function as task()
             );
             
             //  \Log::info($data);
