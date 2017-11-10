@@ -246,7 +246,7 @@ class PagesController extends Controller
                                                     break;
                                     
                                             }
-                                            \Log::info($dblist->status->status_name." - ".$card['name']." - ".$label['name']);
+                                           // \Log::info($dblist->status->status_name." - ".$card['name']." - ".$label['name']);
                                         }
                                     }else{
                                         $DataNoLabel[] = array(
@@ -254,7 +254,7 @@ class PagesController extends Controller
                                             'cardUrl' => $card['shortUrl'],
                                             'status' => $dblist->status->status_name
                                         );
-                                        \Log::info($dblist->status->status_name." - ".$card['name']." - No Label");
+                                        //\Log::info($dblist->status->status_name." - ".$card['name']." - No Label");
                                     }
                                     
                                 }else{
@@ -298,7 +298,7 @@ class PagesController extends Controller
                                                     break;
                                     
                                             }
-                                             \Log::info("Not in Progress - ".$card['name']." - ".$label['name']);
+                                           //  \Log::info("Not in Progress - ".$card['name']." - ".$label['name']);
                                         }
                                     }else{
                                         $DataNoLabel[] = array(
@@ -306,7 +306,7 @@ class PagesController extends Controller
                                             'cardUrl' => $card['shortUrl'],
                                             'status' => "Not in Progress"
                                         );
-                                        \Log::info("Not in Progress - ".$card['name']." - No Label");
+                                        //\Log::info("Not in Progress - ".$card['name']." - No Label");
                                     }
 
                                 }
@@ -324,8 +324,8 @@ class PagesController extends Controller
                 'l3cards' => $DataL3,
                 'l4cards' => $DataL4,
                 'l5cards' => $DataL5,
-                'nolabel' => $DataNoLabel
-
+                'nolabel' => $DataNoLabel,
+                'count' => self::counttask()
             );
             
             //  \Log::info($data);
@@ -337,7 +337,19 @@ class PagesController extends Controller
 
     public function task(){
 
-        $id = auth()->user()->trelloId;
+       
+
+      //  \Log::info($data);
+        
+        $data = self::counttask();
+         return view('pages.task')->with($data);
+
+       // return view('pages.task')->with('variable', $var);
+       
+    }
+
+    public function counttask(){
+         $id = auth()->user()->trelloId;
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
         $lists = boardList::all();
@@ -425,12 +437,6 @@ class PagesController extends Controller
              );
         }
 
-        \Log::info($data);
-        
-        $var = 0;
-         return view('pages.task')->with($data);
-
-       // return view('pages.task')->with('variable', $var);
-       
+        return $data;
     }
 }

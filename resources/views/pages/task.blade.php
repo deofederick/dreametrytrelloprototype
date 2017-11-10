@@ -14,16 +14,16 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 well">
 
-            <button class="btn btn-primary" type="button">
+            <button class="btn btn-primary" type="button" id="todo">
                 To Do <span class="badge">{{ $todo }}</span>
             </button>
-            <button class="btn btn-primary" type="button">
+            <button class="btn btn-primary" type="button" id="rev">
                 For Review <span class="badge">{{ $rev }}</span>
             </button>
-            <button class="btn btn-primary" type="button">
+            <button class="btn btn-primary" type="button" id="done">
                 Done <span class="badge">{{ $done }}</span>
             </button>
-            <button class="btn btn-primary" type="button">
+            <button class="btn btn-primary" type="button" id="paid">
                 Paid <span class="badge">{{ $paid }}</span>
             </button>
         </div>
@@ -113,52 +113,73 @@
 
     <script>
         $('#data').hide();
-        $.get('/taskload', function(json){
-            for(i = 0; i < json["l1cards"].length; i++){
-                
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l1cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l1cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
-                $("#l1_task").append(list);
-            
-            }
 
-            for(i = 0; i < json["l2cards"].length; i++){
-                
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l2cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l2cards"][i]["cardname"]+"</a> - "+json["l2cards"][i]["status"]+"</li>";
-                $("#l2_task").append(list);
-            
-            }
+        var interval = setInterval(function () {
+           
+            $.get('/taskload', function(json){
+                $("#l1_task").empty();
+                $("#l2_task").empty();
+                $("#l3_task").empty();
+                $("#l4_task").empty();
+                $("#l5_task").empty();
+                $("#nol_task").empty();
+                $("#todo").empty();
+                $("#rev").empty();
+                $("#done").empty();
+                $("#paid").empty();
 
-            for(i = 0; i < json["l3cards"].length; i++){
+                for(i = 0; i < json["l1cards"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["l1cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l1cards"][i]["cardname"]+"</a> - "+json["l1cards"][i]["status"]+"</li>";
+                    $("#l1_task").append(list);
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l3cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l3cards"][i]["cardname"]+"</a> - "+json["l3cards"][i]["status"]+"</li>";
-                $("#l3_task").append(list);
-            
-            }
+                }
 
-            for(i = 0; i < json["l4cards"].length; i++){
+                for(i = 0; i < json["l2cards"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["l2cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l2cards"][i]["cardname"]+"</a> - "+json["l2cards"][i]["status"]+"</li>";
+                    $("#l2_task").append(list);
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l4cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l4cards"][i]["cardname"]+"</a> - "+json["l4cards"][i]["status"]+"</li>";
-                $("#l4_task").append(list);
-            
-            }
+                }
 
-            for(i = 0; i < json["l5cards"].length; i++){
+                for(i = 0; i < json["l3cards"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["l3cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l3cards"][i]["cardname"]+"</a> - "+json["l3cards"][i]["status"]+"</li>";
+                    $("#l3_task").append(list);
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["l5cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l5cards"][i]["cardname"]+"</a> - "+json["l5cards"][i]["status"]+"</li>";
-                $("#l5_task").append(list);
-            
-            }
+                }
 
-            for(i = 0; i < json["nolabel"].length; i++){
+                for(i = 0; i < json["l4cards"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["l4cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l4cards"][i]["cardname"]+"</a> - "+json["l4cards"][i]["status"]+"</li>";
+                    $("#l4_task").append(list);
                 
-                var list = "<li class=\"list-group-item\"><a href=\""+json["nolabel"][i]["cardUrl"]+"\" target=\"_blank\">"+json["nolabel"][i]["cardname"]+"</a> - "+json["nolabel"][i]["status"]+"</li>";
-                $("#nol_task").append(list);
-            
-            }
+                }
 
-            $('#loading').hide();
-            $('#data').show()
-        });
+                for(i = 0; i < json["l5cards"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["l5cards"][i]["cardUrl"]+"\" target=\"_blank\">"+json["l5cards"][i]["cardname"]+"</a> - "+json["l5cards"][i]["status"]+"</li>";
+                    $("#l5_task").append(list);
+                
+                }
+
+                for(i = 0; i < json["nolabel"].length; i++){
+                    
+                    var list = "<li class=\"list-group-item\"><a href=\""+json["nolabel"][i]["cardUrl"]+"\" target=\"_blank\">"+json["nolabel"][i]["cardname"]+"</a> - "+json["nolabel"][i]["status"]+"</li>";
+                    $("#nol_task").append(list);
+                
+                }
+
+                $('#todo').append('To Do <span class="badge">'+json["count"]["todo"]+'</span>');
+                $('#rev').append('To Do <span class="badge">'+json["count"]["rev"]+'</span>');
+                $('#done').append('To Do <span class="badge">'+json["count"]["done"]+'</span>');
+                $('#paid').append('To Do <span class="badge">'+json["count"]["paid"]+'</span>');
+
+                $('#loading').hide();
+                $('#data').show()
+            });
+        }, 1000);
+        
 
        
             
