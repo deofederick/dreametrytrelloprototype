@@ -15,7 +15,6 @@ class PagesController extends Controller
     
     public function index(){
 
-        
         if(Auth::guest()){
             return view('pages.index');
         }else{
@@ -24,9 +23,10 @@ class PagesController extends Controller
             $key = auth()->user()->apikey;
             $token = auth()->user()->apitoken;
             //  \Log::info($idUser);
-            $url = 'https://api.trello.com/1/members/'.$idUser.'/boards?key='.$key.'&token='.$token.'&fields=id,name,url,memberships&lists=open';
+            /* $url = 'https://api.trello.com/1/members/'.$idUser.'/boards?key='.$key.'&token='.$token.'&fields=id,name,url,memberships&lists=open';
             $response = Curl::to($url)->get();
-            $boards = json_decode($response, TRUE);
+            $boards = json_decode($response, TRUE); */
+            $boards = Board::all();
             
             $totalOwnedCard = 0;
             $totalL1 = 0;
@@ -45,10 +45,15 @@ class PagesController extends Controller
             $DataNoLabel = [];
 
             foreach ($boards as $board) {
-                foreach ($board['memberships'] as $member) {
-                    if ($idUser == $member['idMember']) {
-                        $boardArray[] = [$board['name'], $board['id']];
-                        $listUrl = "https://api.trello.com/1/boards/".$board['id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
+                $url = 'https://api.trello.com/1/boards/'.$board['board_id'].'/members?key='.$key.'&token='.$token;
+                $response = Curl::to($url)->get();
+                $members = json_decode($response, TRUE);
+              //  \Log::info($members);
+
+                foreach ($members as $member) {
+                    if ($idUser == $member['id']) {
+                        $boardArray[] = [$board['board_name'], $board['board_id']];
+                        $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                         $listresponse = Curl::to($listUrl)->get();
                         $lists = json_decode($listresponse, TRUE);
                         // \Log::info($board['name']);
@@ -57,7 +62,9 @@ class PagesController extends Controller
                             $cardsResponse = Curl::to($cardsUrl)->get();
                             $cards = json_decode($cardsResponse, TRUE);
                             $totalCards += count($cards);
-                        
+                         //   \Log::info($cards);
+
+                            
                             foreach ($cards as $card) {
                                 if (count($card['idMembers']) > 0) {
                                     for ($i=0; $i < count($card['idMembers']) ; $i++) { 
@@ -73,35 +80,35 @@ class PagesController extends Controller
                                                             $DataL1[] = array(
                                                                 'cardname' => $card['name'],
                                                                 'cardUrl' => $card['shortUrl'],
-                                                                'board' => $board['name']
+                                                                'board' => $board['board_name']
                                                             );
                                                             break;
                                                         case 'L2':
                                                             $DataL2[] = array(
                                                                 'cardname' => $card['name'],
                                                                 'cardUrl' => $card['shortUrl'],
-                                                                'board' => $board['name']
+                                                                'board' => $board['board_name']
                                                             );
                                                             break;
                                                         case 'L3':
                                                             $DataL3[] = array(
                                                                 'cardname' => $card['name'],
                                                                 'cardUrl' => $card['shortUrl'],
-                                                                'board' => $board['name']
+                                                                'board' => $board['board_name']
                                                             );
                                                             break;
                                                         case 'L4':
                                                             $DataL4[] = array(
                                                                 'cardname' => $card['name'],
                                                                 'cardUrl' => $card['shortUrl'],
-                                                                'board' => $board['name']
+                                                                'board' => $board['board_name']
                                                             );
                                                             break;
                                                         case 'L5':
                                                             $DataL5[] = array(
                                                                 'cardname' => $card['name'],
                                                                 'cardUrl' => $card['shortUrl'],
-                                                                'board' => $board['name']
+                                                                'board' => $board['board_name']
                                                             );
                                                             break;
                                                             
@@ -111,7 +118,7 @@ class PagesController extends Controller
                                                 $DataNoLabel[] = array(
                                                     'cardname' => $card['name'],
                                                     'cardUrl' => $card['shortUrl'],
-                                                    'board' => $board['name']
+                                                    'board' => $board['board_name']
                                                 );
                                             
                                             }
@@ -124,13 +131,15 @@ class PagesController extends Controller
                                 
                                 
                             }
-                            
+                             
+
                         }
                     }
                 }
             }
          //     \Log::info($DataNoLabel);
             $data = array(
+                'board' => $board['board_name'],
                 'owned' => $totalOwnedCard,
                 'totalcards' => $totalCards,
                 'l1cards' => $DataL1,
