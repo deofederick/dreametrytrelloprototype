@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container" id="loading">
-    <div class="row">
-        <div class="load-4">
-            <div class="ring-1"></div>
-        </div>
-    </div>
-</div>
+
 
 <div class="container" id="data">
 
@@ -171,9 +165,9 @@
                 }
 
                 $('#todo').append('To Do <span class="badge">'+json["count"]["todo"]+'</span>');
-                $('#rev').append('To Do <span class="badge">'+json["count"]["rev"]+'</span>');
-                $('#done').append('To Do <span class="badge">'+json["count"]["done"]+'</span>');
-                $('#paid').append('To Do <span class="badge">'+json["count"]["paid"]+'</span>');
+                $('#rev').append('For Review <span class="badge">'+json["count"]["rev"]+'</span>');
+                $('#done').append('Done <span class="badge">'+json["count"]["done"]+'</span>');
+                $('#paid').append('Paid <span class="badge">'+json["count"]["paid"]+'</span>');
 
                 $('#loading').hide();
                 $('#data').show()

@@ -35,6 +35,7 @@
     </script>
    
     @include('inc.navbar')
+    @include('inc.loading')
     <div class="container">
         @include('inc.message')
     </div>

@@ -144,7 +144,7 @@
 
 
     <script>
-    
+        $('#loading').hide();
     </script>
   
 

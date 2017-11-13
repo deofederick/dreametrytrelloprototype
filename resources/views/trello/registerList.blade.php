@@ -39,4 +39,9 @@
             </div>
         @endif
     </div>
+
+    <script>
+        $('#loading').hide();
+    </script>
+  
 @endsection

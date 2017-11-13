@@ -96,4 +96,9 @@
         @endif
     </div>
 </div>
+
+    <script>
+        $('#loading').hide();
+    </script>
+  
 @endsection

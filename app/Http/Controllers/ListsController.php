@@ -191,7 +191,7 @@ class ListsController extends Controller
         $boardListurl = 'https://api.trello.com/1/boards/'.$id.'?key='.$key.'&token='.$token.'&fields=name';
         $boardListresponse = Curl::to($boardListurl)->get();
         $boardLists = json_decode($boardListresponse, TRUE);
-        
+        //\Log::info($boardLists);
       
         $edit = false;
         if(count($regboard) > 0/*  && count($regboardList) != 0 */){
