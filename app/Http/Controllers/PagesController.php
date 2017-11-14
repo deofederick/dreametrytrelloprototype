@@ -9,6 +9,7 @@ use Auth;
 use App\boardList;
 use App\Board;
 
+
 class PagesController extends Controller
 {
 
@@ -357,7 +358,7 @@ class PagesController extends Controller
     }
 
     public function counttask(){
-         $id = auth()->user()->trelloId;
+        $id = auth()->user()->trelloId;
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
         $lists = boardList::all();
@@ -445,6 +446,18 @@ class PagesController extends Controller
              );
         }
 
+        return $data;
+    }
+
+    public function counter(){
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $data = array(
+                'username' => $user['name']
+            );
+        }
+        
         return $data;
     }
 }

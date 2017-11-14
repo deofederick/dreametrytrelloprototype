@@ -30,9 +30,7 @@
                     <div class="panel-heading">L1 Task Cards</div>
                     <div class="panel-body">
 
-                        <ul class="list-group" id="l1_task">
-
-                        </ul>
+                      
 
                     </div>
                 </div>

@@ -13,6 +13,9 @@
   </div>
 </div>
 
+    <script>
+        $('#loading').hide();
+    </script>
 @else
 
     <div class="container">

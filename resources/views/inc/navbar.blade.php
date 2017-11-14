@@ -21,7 +21,8 @@
             <ul class="nav navbar-nav">
                 @if (!(Auth::guest()))
                     
-                    <li><a href="{{ route('task') }}">Task</a></li>
+                    <li><a href="{{ route('task') }}">My Task</a></li>
+                    <li><a href="{{ route('counter') }}">Live Counter</a></li>
                     <li><a href="#">Dashboard</a></li>
                     <li><a href="https://trello.com">Trello</a></li>
 

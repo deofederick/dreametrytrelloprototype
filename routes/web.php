@@ -19,5 +19,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/task', 'PagesController@task')->name('task');
 Route::get('/load', 'PagesController@load')->name('load');
 Route::get('/taskload', 'PagesController@taskload')->name('load');
+Route::get('/livecounter', 'PagesController@counter')->name('counter');
 
 Route::resource('registerlist', 'ListsController');
